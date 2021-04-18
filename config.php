@@ -9,3 +9,4 @@ define('MSG_TITTLE_REQUIRED', 'タスク名を入力してください');
 
 // ステータスを定数として定義
 define('TASK_STATUS_NOTYET', 'notyet');
+define('TASK_STATUS_DONE', 'done');
