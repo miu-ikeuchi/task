@@ -27,7 +27,7 @@ function insertValidate($title)
     $errors = [];
 
     if ($title === '') {
-        $errors[] = MSG_TITTLE_REQUIRED;
+        $errors[] = MSG_TITLE_REQUIRED;
     }
 
     return $errors;
@@ -103,4 +103,80 @@ function findTaskByStatus($status)
 
     // 結果の取得
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function updateValidate($title, $task)
+{
+    $errors = [];
+
+    if ($title == '') {
+        $errors[] = MSG_TITLE_REQUIRED;
+    }
+
+    if ($title == $task['title']) {
+        $errors[] = MSG_TITLE_NO_CHANGE;
+    }
+
+    return $errors;
+}
+
+function updateTask($id, $title)
+{
+    $dbh = connectDb();
+
+    $sql = <<<EOM
+    UPDATE
+        tasks
+    SET
+        title = :title
+    WHERE
+        id = :id
+    EOM;
+
+    $stmt = $dbh->prepare($sql);
+
+    $stmt->bindParam(':title', $title, PDO::PARAM_STR);
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+    $stmt->execute();
+}
+
+function deleteTask($id)
+{
+    $dbh =connectDb();
+
+    $sql = <<<EOM
+    DELETE FROM
+        tasks
+    WHERE
+        id = :id
+    EOM;
+
+    $stmt = $dbh->prepare($sql);
+
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+    $stmt->execute();
+}
+
+function findById($id)
+{
+    $dbh = connectDb();
+
+    $sql = <<<EMO
+    SELECT
+        *
+    FROM
+        tasks
+    WHERE
+        id = :id;
+    EMO;
+
+    $stmt = $dbh->prepare($sql);
+
+    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+
+    $stmt->execute();
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
